@@ -1,4 +1,4 @@
-const db = require('../data/schemes.db3');
+const db = require('../data/db-config');
 
 module.exports = {
     find,
@@ -20,6 +20,10 @@ function findById(id){
 }
 
 function findSteps(){
+    return db('schemes', 'steps')
+    .select('scheme_name', 'step_number', 'instructions')
+    .from('scheme')
+    .join('steps', 'scheme.scheme_name', '=', 'steps.scheme_id')
 
 }
 
@@ -31,12 +35,14 @@ function add(scheme){
     })
 }
 
-function update(changes, id){
+function update(scheme, id){
     return db('schemes')
-    .update(changes, id)
+    .where('id', Number(id))
+    .update(scheme)
 }
 
 function remove(id){
     return db('schemes')
-    .remove(id)
+    .where('id', Number(id))
+    .del();
 }
